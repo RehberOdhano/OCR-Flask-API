@@ -19,14 +19,14 @@ from utils import get_encoded_image, get_words_location, allowed_file
 #   aws_secret_access_key=AWS_SECRET_KEY
 # )
 
-api = Flask(__name__)
-# CORS(api)
+app = Flask(__name__)
+# CORS(app)
 
-@api.route('/', methods=['GET'])
+@app.route('/', methods=['GET'])
 def index_page():
   return "API is working"
 
-@api.route('/upload', methods=["POST"]) 
+@app.route('/upload', methods=["POST"]) 
 def upload_file():
   try:
     # Check if a file was included in the POST request
@@ -76,10 +76,10 @@ def upload_file():
     return json.dumps({ "data":book_words, "pages":i})
   except Exception as e:
     print(e)
-    api.logger.info("error occurred")
+    app.logger.info("error occurred")
     return "error"
 
-# if __name__ == '__main__':
-#   api.run(debug=True)
+if __name__ == '__main__':
+  app.run(debug=True)
 
 

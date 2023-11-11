@@ -1,0 +1,27 @@
+services:
+  - name: flask-app
+    type: python
+    config:
+      name: flask-app
+      entry: main:api
+      buildCommand: pip install -r requirements.txt
+      routes:
+        - src: /upload
+          dest: flask-app.upload
+
+scripts:
+  - name: start
+    command: gunicorn main:api --host 0.0.0.0 --port $PORT
+
+build:
+  env: python=3.8
+
+secrets:
+  - name: TESSDATA_PREFIX
+    from:
+      secret: pytesseract-config
+
+# Environment variables for Railway secrets
+environments:
+  production:
+    TESSDATA_PREFIX: $TESSDATA_PREFIX
