@@ -1,0 +1,12 @@
+# This is the name of your app on Railway
+name = "edtech-ocr-backend"
+
+# Specify the language for your app
+language = "python"
+
+# Specify the version of Python you're using
+python = "3.11.3"
+
+# The start command for your Flask app using Gunicorn
+start = "gunicorn -w 4 -b 0.0.0.0:$PORT main:api"
+
