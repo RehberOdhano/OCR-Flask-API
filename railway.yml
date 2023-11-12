@@ -11,7 +11,7 @@ services:
 
 scripts:
   - name: start
-    command: gunicorn main:api --host 0.0.0.0 --port $PORT
+    command: gunicorn main:api --host 0.0.0.0 --port 5000
 
 build:
   dockerfile: Dockerfile
