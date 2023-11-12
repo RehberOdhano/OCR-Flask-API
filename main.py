@@ -12,14 +12,20 @@ pytesseract.pytesseract.tesseract_cmd = str(os.environ.get('TESSERACT'))
 # helper functions
 from utils import get_encoded_image, get_words_location, allowed_file
 
+api = Flask(__name__)
+
+api.config.update(
+  S3_BUCKET_NAME = S3_BUCKET_NAME,
+  ACCESS_KEY = ACCESS_KEY,
+  SECRET_KEY = SECRET_KEY
+)
+
 # setting aws s3 client
 s3 = boto3.client(
   's3', 
-  aws_access_key_id=ACCESS_KEY,
-  aws_secret_access_key=SECRET_KEY
+  aws_access_key_id=api.config['ACCESS_KEY'],
+  aws_secret_access_key=api.config['SECRET_KEY']
 )
-
-api = Flask(__name__)
 
 @api.route('/', methods=['GET'])
 def index_page():
@@ -47,13 +53,13 @@ def upload_file():
     unique_file_name = str(uuid.uuid4()) + pdf_file.filename
     
     s3_resource = boto3.resource('s3')
-    s3_bucket = s3_resource.Bucket(S3_BUCKET_NAME)
+    s3_bucket = s3_resource.Bucket(api.config['S3_BUCKET_NAME'])
     
     # uploading the file to s3 bucket
     s3_bucket.Object(unique_file_name).put(Body=pdf_file)
     
     # retrieving the saved file from s3 bucket
-    pdf_file = s3.get_object(Bucket=S3_BUCKET_NAME, Key=unique_file_name)['Body']
+    pdf_file = s3.get_object(Bucket=api.config['S3_BUCKET_NAME'], Key=unique_file_name)['Body']
     
     # Read the content of the PDF file
     pdf_bytes = pdf_file.read()
