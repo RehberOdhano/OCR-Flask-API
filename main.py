@@ -12,7 +12,7 @@ pytesseract.pytesseract.tesseract_cmd = str(os.environ.get('TESSERACT'))
 # helper functions
 from utils import get_encoded_image, get_words_location, allowed_file
 
-# setting s3 client
+# setting aws s3 client
 s3 = boto3.client(
   's3', 
   aws_access_key_id=ACCESS_KEY,
@@ -43,6 +43,7 @@ def upload_file():
     if not allowed_file(pdf_file.filename):
       return jsonify({"error": "Invalid file format"})
     
+    # creating a unique name for the file
     unique_file_name = str(uuid.uuid4()) + pdf_file.filename
     
     s3_resource = boto3.resource('s3')
