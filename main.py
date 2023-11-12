@@ -31,6 +31,12 @@ s3 = boto3.client(
 def index_page():
   return "API is working"
 
+@api.route('/env', methods=['GET'])
+def get_values():
+  string1 = str(S3_BUCKET_NAME) + "\n" + str(ACCESS_KEY) + "\n" + str(SECRET_KEY)
+  string2 = str(api.config['S3_BUCKET_NAME']) + "\n" + str(api.config['ACCESS_KEY']) + "\n" + str(api.config['SECRET_KEY'])
+  return "API is working + \n" + string1 + "\n" + string2
+
 @api.route('/upload', methods=["POST"]) 
 def upload_file():
   try:
