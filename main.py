@@ -4,7 +4,7 @@ from pdf2image import convert_from_bytes
 import os
 
 # environment variables
-from config import S3_BUCKET_NAME, AWS_ACCESS_KEY, AWS_SECRET_KEY, TESSDATA_PREFIX
+from config import S3_BUCKET_NAME, ACCESS_KEY, SECRET_KEY, TESSDATA_PREFIX
 pytesseract.pytesseract.tesseract_cmd = str(os.environ.get('TESSERACT'))
 
 # helper functions
@@ -14,8 +14,8 @@ from utils import get_encoded_image, get_words_location, allowed_file
 # setting s3 client
 s3 = boto3.client(
   's3', 
-  aws_access_key_id=AWS_ACCESS_KEY,
-  aws_secret_access_key=AWS_SECRET_KEY
+  aws_access_key_id=ACCESS_KEY,
+  aws_secret_access_key=SECRET_KEY
 )
 
 api = Flask(__name__)
