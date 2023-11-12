@@ -12,7 +12,6 @@ pytesseract.pytesseract.tesseract_cmd = str(os.environ.get('TESSERACT'))
 # helper functions
 from utils import get_encoded_image, get_words_location, allowed_file
 
-
 # setting s3 client
 s3 = boto3.client(
   's3', 
