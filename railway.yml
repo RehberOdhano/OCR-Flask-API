@@ -18,6 +18,7 @@ scripts:
       apt-get install -y poppler-utils
 
 build:
+  dockerfile: Dockerfile
   env: python=3.8
 
 secrets:
