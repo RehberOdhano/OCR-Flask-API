@@ -3,10 +3,20 @@ import pytesseract
 from pdf2image import convert_from_bytes
 import os
 
+# environment variables
+from config import S3_BUCKET_NAME, AWS_ACCESS_KEY, AWS_SECRET_KEY, TESSDATA_PREFIX
 pytesseract.pytesseract.tesseract_cmd = str(os.environ.get('TESSERACT'))
 
 # helper functions
 from utils import get_encoded_image, get_words_location, allowed_file
+
+
+# setting s3 client
+s3 = boto3.client(
+  's3', 
+  aws_access_key_id=AWS_ACCESS_KEY,
+  aws_secret_access_key=AWS_SECRET_KEY
+)
 
 api = Flask(__name__)
 
@@ -31,6 +41,17 @@ def upload_file():
     # Check if the file is allowed (e.g., only accept pdf files)
     if not allowed_file(pdf_file.filename):
       return jsonify({"error": "Invalid file format"})
+    
+    unique_file_name = str(uuid.uuid4()) + pdf_file.filename
+    
+    s3_resource = boto3.resource('s3')
+    s3_bucket = s3_resource.Bucket(S3_BUCKET_NAME)
+    
+    # uploading the file to s3 bucket
+    s3_bucket.Object(unique_file_name).put(Body=pdf_file)
+    
+    # retrieving the saved file from s3 bucket
+    pdf_file = s3.get_object(Bucket=S3_BUCKET_NAME, Key=unique_file_name)['Body']
     
     # Read the content of the PDF file
     pdf_bytes = pdf_file.read()
