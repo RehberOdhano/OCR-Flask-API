@@ -12,10 +12,6 @@ services:
 scripts:
   - name: start
     command: gunicorn main:api --host 0.0.0.0 --port $PORT
-  - name: custom-build
-    command: |
-      echo "Installing the poppler-utils."
-      apt-get install -y poppler-utils
 
 build:
   dockerfile: Dockerfile
