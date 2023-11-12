@@ -2,6 +2,8 @@ from flask import Flask, json, request, jsonify
 import pytesseract
 from pdf2image import convert_from_bytes
 import os
+import uuid
+import boto3
 
 # environment variables
 from config import S3_BUCKET_NAME, ACCESS_KEY, SECRET_KEY, TESSDATA_PREFIX
