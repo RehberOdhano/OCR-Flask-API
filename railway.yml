@@ -11,10 +11,9 @@ services:
 
 scripts:
   - name: start
-    command: gunicorn main:api --host 0.0.0.0 --port 5000
+    command: gunicorn main:api --host 0.0.0.0 --port $PORT
 
 build:
-  dockerfile: Dockerfile
   env: python=3.8
 
 secrets:
