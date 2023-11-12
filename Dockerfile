@@ -4,5 +4,6 @@ WORKDIR /app
 
 COPY . .
 
+RUN pip install --upgrade pip
 RUN pip3 install -r requirements.txt
-RUN pip3 install python-poppler
+RUN pip3 install poppler-utils
