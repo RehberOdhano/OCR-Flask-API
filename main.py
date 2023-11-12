@@ -6,7 +6,7 @@ import uuid
 import boto3
 
 # environment variables
-from config import S3_BUCKET_NAME, ACCESS_KEY, SECRET_KEY, TESSDATA_PREFIX
+from config import S3_BUCKET_NAME, ACCESS_KEY, SECRET_KEY
 pytesseract.pytesseract.tesseract_cmd = str(os.environ.get('TESSERACT'))
 
 # helper functions
