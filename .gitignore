@@ -8,3 +8,7 @@ ssp-test.pdf
 .env
 
 __pycache__
+lib
+venv
+Scripts
+pyvenv.cfg
