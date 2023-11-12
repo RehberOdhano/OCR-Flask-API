@@ -20,4 +20,8 @@ ARG ZEET_APP
 ARG ZEET_PROJECT
 
 RUN pip3 install -r requirements.txt
+
+# Install CMake
+RUN apt-get update && apt-get install -y cmake
+
 RUN pip3 install python-poppler
