@@ -20,5 +20,4 @@ ARG ZEET_APP
 ARG ZEET_PROJECT
 
 RUN pip3 install -r requirements.txt
-RUN apt-get update && apt-get install -y poppler-utils
-RUN apt-get install -y python-poppler
+RUN pip3 install python-poppler
