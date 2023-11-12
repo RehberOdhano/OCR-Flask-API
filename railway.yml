@@ -11,7 +11,8 @@ services:
 
 scripts:
   - name: start
-    command: gunicorn main:api --host 0.0.0.0 --port $PORT
+    command: gunicorn -w 4 -b 0.0.0.0:8000 wsgi:api
+    # command: gunicorn main:api --host 0.0.0.0 --port $PORT
 
 build:
   env: python=3.8
