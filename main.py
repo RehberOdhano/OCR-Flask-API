@@ -69,7 +69,7 @@ def upload_file():
     images_path = os.path.join(api.config.get("upload_folder"),'working_dir')
     os.makedirs(images_path, exist_ok=True)
 
-    pages = convert_from_path(save_path)
+    pages = convert_from_path(save_path, poppler_path=str(os.environ.get('POPPLER_PATH')))
     
     # Read the content of the PDF file
     # pdf_bytes = pdf_file.read()
