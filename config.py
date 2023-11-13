@@ -1,4 +1,6 @@
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # environment variables
 S3_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
