@@ -90,6 +90,6 @@ def upload_file():
   except Exception as e:
     print(e)
     api.logger.info("error occurred")
-    return e
+    return json.dumps({ "error":e})
 
 
