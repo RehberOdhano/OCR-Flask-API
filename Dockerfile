@@ -10,10 +10,10 @@ WORKDIR /app
 COPY . .
 
 RUN pip install --upgrade pip
-RUN pip install Dora
-RUN pip3 install scikit-learn
-RUN pip3 install pdf-info
 RUN pip3 install -r requirements.txt
+RUN pip3 install scikit-learn
+RUN pip install Dora
+RUN pip3 install pdf-info
 
 # Expose the port on which your application will run
 EXPOSE 5000
