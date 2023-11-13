@@ -1,12 +1,12 @@
 from flask import Flask, json, request, jsonify
 import pytesseract
-from pdf2image import convert_from_bytes
+from pdf2image import convert_from_bytes, convert_from_path
 import os
 import uuid
 import boto3
 
 # environment variables
-from config import S3_BUCKET_NAME, ACCESS_KEY, SECRET_KEY
+# from config import S3_BUCKET_NAME, ACCESS_KEY, SECRET_KEY
 pytesseract.pytesseract.tesseract_cmd = str(os.environ.get('TESSERACT'))
 
 # helper functions
@@ -14,28 +14,33 @@ from utils import get_encoded_image, get_words_location, allowed_file
 
 api = Flask(__name__)
 
-api.config.update(
-  S3_BUCKET_NAME = S3_BUCKET_NAME,
-  ACCESS_KEY = ACCESS_KEY,
-  SECRET_KEY = SECRET_KEY
-)
+try:
+  path = os.path.dirname(os.path.abspath(__file__))
+  upload_folder=os.path.join(
+  path.replace("/file_folder",""),"tmp")
+  os.makedirs(upload_folder, exist_ok=True)
+  api.config['upload_folder'] = upload_folder
+
+except Exception as e:
+  api.logger.info("An error occurred while creating temp folder")
+  api.logger.error("Exception occurred : {}".format(e))
+
+# api.config.update(
+#   S3_BUCKET_NAME = S3_BUCKET_NAME,
+#   ACCESS_KEY = ACCESS_KEY,
+#   SECRET_KEY = SECRET_KEY
+# )
 
 # setting aws s3 client
-s3 = boto3.client(
-  's3', 
-  aws_access_key_id=api.config['ACCESS_KEY'],
-  aws_secret_access_key=api.config['SECRET_KEY']
-)
+# s3 = boto3.client(
+#   's3', 
+#   aws_access_key_id=api.config['ACCESS_KEY'],
+#   aws_secret_access_key=api.config['SECRET_KEY']
+# )
 
 @api.route('/', methods=['GET'])
 def index_page():
   return "API is working"
-
-@api.route('/env', methods=['GET'])
-def get_values():
-  string1 = str(S3_BUCKET_NAME) + "\n" + str(ACCESS_KEY) + "\n" + str(SECRET_KEY)
-  string2 = str(api.config['S3_BUCKET_NAME']) + "\n" + str(api.config['ACCESS_KEY']) + "\n" + str(api.config['SECRET_KEY'])
-  return "API is working + \n" + string1 + "\n" + string2
 
 @api.route('/upload', methods=["POST"]) 
 def upload_file():
@@ -58,20 +63,19 @@ def upload_file():
     # creating a unique name for the file
     unique_file_name = str(uuid.uuid4()) + pdf_file.filename
     
-    s3_resource = boto3.resource('s3')
-    s3_bucket = s3_resource.Bucket(api.config['S3_BUCKET_NAME'])
-    
-    # uploading the file to s3 bucket
-    s3_bucket.Object(unique_file_name).put(Body=pdf_file)
-    
-    # retrieving the saved file from s3 bucket
-    pdf_file = s3.get_object(Bucket=api.config['S3_BUCKET_NAME'], Key=unique_file_name)['Body']
+    save_path = os.path.join(api.config.get("upload_folder"), unique_file_name)
+    pdf_file.save(save_path)
+
+    images_path = os.path.join(api.config.get("upload_folder"),'working_dir')
+    os.makedirs(images_path, exist_ok=True)
+
+    pages = convert_from_path(save_path)
     
     # Read the content of the PDF file
-    pdf_bytes = pdf_file.read()
+    # pdf_bytes = pdf_file.read()
   
     # Convert the PDF to images
-    pages = convert_from_bytes(pdf_bytes)
+    # pages = convert_from_bytes(pdf_bytes)
     
     book_words = []
     for i, image in enumerate(pages):
