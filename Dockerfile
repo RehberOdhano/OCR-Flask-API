@@ -9,11 +9,8 @@ WORKDIR /app
 
 COPY . .
 
-COPY requirements.txt /usr/src/app/
-RUN pip3 install --no-cache-dir -r /usr/src/app/requirements.txt
-
 RUN pip install --upgrade pip setuptools wheel
-# RUN pip3 install -r requirements.txt
+RUN pip3 install -r requirements.txt
 RUN pip3 install scikit-learn
 RUN pip3 install pdf-info
 
