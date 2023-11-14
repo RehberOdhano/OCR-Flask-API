@@ -9,7 +9,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN pip install --upgrade pip
+RUN py -m pip install --upgrade pip setuptools wheel
 RUN pip3 install -r requirements.txt
 RUN pip3 install scikit-learn
 RUN pip3 install pdf-info
